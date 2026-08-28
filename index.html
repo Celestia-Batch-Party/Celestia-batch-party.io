@@ -7,7 +7,6 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="Style.css">
 </head>
 <body class="min-h-screen relative selection:bg-yellow-500 selection:text-white">
@@ -30,9 +29,6 @@
                 <a href="#tickets" class="hover:text-yellow-400 transition-colors">Details</a>
                 <button onclick="document.getElementById('view-landing').scrollIntoView()" class="text-yellow-500 font-bold hover:text-yellow-300">Register</button>
             </div>
-            <button onclick="window.app.promptAdmin()" class="text-xs text-slate-600 hover:text-yellow-500 transition-colors font-mono">
-                [ADMIN]
-            </button>
         </div>
     </nav>
 
@@ -56,11 +52,9 @@
             </div>
         </section>
 
-        <!-- Pageant Judges Section -->
         <section id="judges" class="container mx-auto px-4 py-20 border-t border-slate-800/50 bg-slate-900/10">
             <h2 class="text-3xl font-bold text-white mb-12 text-center">Pageant Judges</h2>
             <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-                <!-- Judge Card 1 -->
                 <div class="relative rounded-3xl p-6 flex flex-col items-center text-center overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl hover:border-yellow-500/50 transition-colors">
                     <div class="w-24 h-24 rounded-full bg-slate-800 border-2 border-yellow-500 mb-4 overflow-hidden">
                         <img src="https://via.placeholder.com/150" alt="Judge 1" class="w-full h-full object-cover">
@@ -68,7 +62,6 @@
                     <h3 class="text-lg font-bold text-white">Judge Name</h3>
                     <p class="text-sm text-yellow-400 font-medium">Fashion Icon</p>
                 </div>
-                <!-- Judge Card 2 -->
                 <div class="relative rounded-3xl p-6 flex flex-col items-center text-center overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl hover:border-yellow-500/50 transition-colors">
                     <div class="w-24 h-24 rounded-full bg-slate-800 border-2 border-yellow-500 mb-4 overflow-hidden">
                         <img src="https://via.placeholder.com/150" alt="Judge 2" class="w-full h-full object-cover">
@@ -76,7 +69,6 @@
                     <h3 class="text-lg font-bold text-white">Judge Name</h3>
                     <p class="text-sm text-yellow-400 font-medium">Industry Expert</p>
                 </div>
-                <!-- Judge Card 3 -->
                 <div class="relative rounded-3xl p-6 flex flex-col items-center text-center overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl hover:border-yellow-500/50 transition-colors">
                     <div class="w-24 h-24 rounded-full bg-slate-800 border-2 border-yellow-500 mb-4 overflow-hidden">
                         <img src="https://via.placeholder.com/150" alt="Judge 3" class="w-full h-full object-cover">
@@ -101,7 +93,6 @@
                 <form id="registration-form" class="space-y-8">
                     <div id="reg-msg" class="hidden p-3 rounded text-sm"></div>
 
-                    <!-- Step 1 & 2 Inputs (Omitted repetition for brevity, matching previous UI structure) -->
                     <div class="space-y-4">
                         <h3 class="text-xl font-semibold text-yellow-500 border-b border-slate-700 pb-2">Step 1 & 2 – Personal & Academic Details</h3>
                         <div class="grid md:grid-cols-2 gap-5">
@@ -122,7 +113,6 @@
                                     <option value="Grade 05">Grade 05</option>
                                 </select>
                             </div>
-                            <!-- Conditional Stream Block -->
                             <div id="stream-container" class="hidden">
                                 <label class="block text-sm text-slate-300">Academic Stream</label>
                                 <select id="reg-stream" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-3 text-white">
@@ -146,7 +136,6 @@
                                 <option value="No">No</option>
                             </select>
                         </div>
-                        <!-- Conditional Pageant Photo Upload -->
                         <div id="pageant-upload-container" class="hidden p-4 bg-yellow-900/20 border border-yellow-700/50 rounded-lg">
                             <label class="block text-sm font-medium text-slate-300 mb-1">Upload Pageant Photo (Required for participants)</label>
                             <input type="file" id="reg-pageant-file" accept="image/*" class="w-full text-sm text-slate-300 bg-slate-800 border border-slate-600 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:bg-yellow-600 file:text-white cursor-pointer">
@@ -180,7 +169,6 @@
             </div>
         </section>
 
-        <!-- Final Ticket Modal -->
         <section id="view-ticket" class="hidden-view fixed inset-0 z-[70] bg-black flex items-center justify-center p-4 animate-slide-up">
             <div class="w-full max-w-md bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-700 relative">
                 <div class="h-32 bg-gradient-to-r from-yellow-500 to-yellow-400 p-6 relative">
@@ -198,33 +186,6 @@
             </div>
         </section>
 
-    </div>
-
-    <!-- Admin Panel (No Passcode) -->
-    <div id="view-admin" class="hidden-view fixed inset-0 z-[100] bg-slate-900 overflow-y-auto">
-        <div class="w-full max-w-6xl mx-auto p-4 md:p-8 space-y-8 animate-fade-in pb-12">
-            <div class="flex justify-between items-center mb-8 border-b border-slate-700 pb-6 sticky top-0 bg-slate-900 z-10 pt-4">
-                <div><h2 class="text-3xl font-bold text-white">Gate Control</h2><p class="text-slate-400">Reference Number Input</p></div>
-                <div class="flex gap-2">
-                    <button onclick="window.app.toggleAdminView('list')" class="bg-yellow-600 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg text-sm">Database</button>
-                    <button onclick="window.app.toggleAdminView('dashboard')" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm">Stats</button>
-                    <button onclick="window.location.reload()" class="bg-red-900 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm">Exit</button>
-                </div>
-            </div>
-            
-            <div id="admin-dashboard-panel" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
-                   <h3 class="text-xl font-semibold text-white mb-6">Entrance Check-In</h3>
-                   <form onsubmit="event.preventDefault(); window.app.handleManualCheckIn();" class="space-y-4">
-                     <label class="block text-sm text-slate-400 mb-2">Enter Reference Number</label>
-                     <input type="text" id="manual-checkin-id" class="w-full bg-slate-900 border border-slate-600 text-white text-center py-4 text-2xl tracking-widest rounded-lg uppercase" placeholder="e.g. A1B2C3D4">
-                     <button type="submit" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-3 rounded-lg mt-4">Verify Entrance</button>
-                   </form>
-                   <div id="checkin-status-msg" class="hidden mt-4 p-4 rounded-lg border text-center font-medium"></div>
-                </div>
-                <!-- Analytics Column omitted for brevity (Keep existing structure) -->
-            </div>
-        </div>
     </div>
 
     <script src="App.js"></script>
