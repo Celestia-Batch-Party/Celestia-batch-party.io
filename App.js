@@ -1,11 +1,11 @@
 // Replace with your Google Apps Script Web App URL
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzGjtviBwaN_nNRKQlKWY-GIlAsouIC8h2EZbmzMQDiY5S6MviWycyR7AOVKt6fN26fqg/exec"; 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyP94XYUSJh1sj6b8Z8uxWNLQsad1M0PmGmhrKCLWjyClWoNDaMwKL0QhNz3KgopOxNig/exec"; 
 
 async function gasCall(action, data = {}) {
     const response = await fetch(SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: action, data: data }),
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' } // 'text/plain' handles CORS cleanly
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
     });
     return await response.json();
 }
@@ -26,24 +26,11 @@ window.app = {
         document.body.style.overflow = mode === 'register' ? 'hidden' : 'auto';
     },
 
-    promptAdmin: function() {
-        // Passcode removed as per user correction request for mobile ease of access
-        document.getElementById('view-admin').classList.remove('hidden-view');
-        this.loadDashboard();
-    },
-
-    toggleAdminView: function(view) {
-        document.getElementById('admin-dashboard-panel').classList.toggle('hidden-view', view === 'list');
-        // document.getElementById('admin-list-panel').classList.toggle('hidden-view', view !== 'list');
-        if (view === 'list') this.loadFullList(); else this.loadDashboard();
-    },
-
     handleBatchLogic: function() {
         const batch = document.getElementById('reg-batch').value;
         const streamContainer = document.getElementById('stream-container');
         const streamInput = document.getElementById('reg-stream');
         
-        // Add Stream conditional dropdown for AL 2025
         if (batch === 'AL 2025') {
             streamContainer.classList.remove('hidden');
             streamInput.setAttribute('required', 'true');
@@ -97,14 +84,12 @@ window.app = {
         try {
             btn.disabled = true;
             
-            // Upload Payment File
             btn.innerHTML = 'Uploading Payment...';
             const payB64 = await fileToBase64(paymentFile);
             const payRes = await gasCall('upload', { ...payB64, folderType: 'payment' });
             if (!payRes.success) throw new Error(payRes.message);
             formData.fileLink = payRes.fileLink;
 
-            // Conditional Pageant Upload
             if (pageantFile && formData.participation.includes('Yes')) {
                 btn.innerHTML = 'Uploading Photo...';
                 const pagB64 = await fileToBase64(pageantFile);
@@ -113,7 +98,6 @@ window.app = {
                 formData.pageantFileLink = pagRes.fileLink;
             }
 
-            // Submit Registration
             btn.innerHTML = 'Registering...';
             const regRes = await gasCall('register', formData);
             
@@ -121,7 +105,7 @@ window.app = {
                 document.getElementById('view-register').classList.add('hidden-view');
                 document.getElementById('view-ticket').classList.remove('hidden-view');
                 document.getElementById('ticket-attendee-name').textContent = regRes.name;
-                document.getElementById('ticket-reference').textContent = regRes.uuid; // Showing Reference Number instead of QR
+                document.getElementById('ticket-reference').textContent = regRes.uuid;
             } else {
                 showMsg(regRes.message, 'error');
             }
@@ -131,29 +115,6 @@ window.app = {
             btn.disabled = false;
             btn.innerHTML = origText;
         }
-    },
-
-    handleManualCheckIn: async function() {
-        const uuid = document.getElementById('manual-checkin-id').value.trim();
-        const msgBox = document.getElementById('checkin-status-msg');
-        
-        if (!uuid) return;
-        
-        msgBox.className = "mt-4 p-4 rounded-lg border text-center font-medium bg-slate-800 text-slate-300";
-        msgBox.textContent = "Verifying...";
-        
-        const res = await gasCall('checkIn', { uuid });
-        
-        msgBox.className = `mt-4 p-4 rounded-lg border text-center font-medium animate-fade-in ${res.success ? 'bg-green-900/50 border-green-500 text-green-200' : 'bg-red-900/50 border-red-500 text-red-200'}`;
-        msgBox.innerHTML = `<strong>${res.message}</strong><br><span class="text-xs">${res.details}</span>`;
-        
-        if(res.success) this.loadDashboard();
-        document.getElementById('manual-checkin-id').value = '';
-    },
-
-    loadDashboard: async function() {
-        const data = await gasCall('getStats');
-        // Handle rendering logic similarly as before
     }
 };
 
